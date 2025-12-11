@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Patient Management Dashboard</title>
+    <link rel="stylesheet" href="/style.css" />
+    <style>
+        .appointment-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .appointment-section h2 {
+            color: white;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: white;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        select:focus, input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Patient Management System</h1>
+
+<!-- Appointment Booking Section -->
+<section class="appointment-section">
+    <h2>📅 Book Appointment</h2>
+    <form id="book-appointment-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="department">Select Department *</label>
+                <select id="department" name="department" required>
+                    <option value="">Choose Department</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="doctor">Select Doctor *</label>
+                <select id="doctor" name="doctor" required>
+                    <option value="">Choose Doctor</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="appointment-date">Appointment Date *</label>
+                <input type="date" id="appointment-date" name="appointmentDate" required>
+            </div>
+            <div class="form-group">
+                <label for="appointment-time">Appointment Time *</label>
+                <input type="time" id="appointment-time" name="appointmentTime" required
+                       min="09:00" max="17:00">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="patient-name">Your Name *</label>
+                <input type="text" id="patient-name" name="patientName" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="patient-email">Your Email *</label>
+                <input type="email" id="patient-email" name="patientEmail" placeholder="Enter your email" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="patient-phone">Your Phone *</label>
+            <input type="tel" id="patient-phone" name="patientPhone" placeholder="Enter your phone number" required>
+        </div>
+
+        <button type="submit" style="background: #28a745; padding: 12px 30px; font-size: 16px;">Book Appointment</button>
+    </form>
+    <div id="appointment-message" class="message"></div>
+</section>
+
+<!-- Rest of your patient sections... -->
+
+<script src="/patient.js"></script>
+</body>
+</html>

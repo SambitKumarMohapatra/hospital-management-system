@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Advanced Admin Dashboard</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: grid;
+            grid-template-areas:
+                "nav nav"
+                "sidebar main";
+            grid-template-rows: 60px 1fr;
+            grid-template-columns: 250px 1fr;
+            height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            grid-area: nav;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Sidebar */
+        #sidebar {
+            grid-area: sidebar;
+            background: #34495e;
+            padding: 20px 0;
+        }
+
+        #sidebar button {
+            width: 100%;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        #sidebar button:hover {
+            background: #2c3e50;
+        }
+
+        #sidebar button.active {
+            background: #3498db;
+        }
+
+        /* Main Content */
+        main {
+            grid-area: main;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #main-title {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        #action-buttons-container {
+            margin-bottom: 20px;
+        }
+
+        .section-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .section-btn:hover {
+            background: #2980b9;
+        }
+
+        /* Booked Patients Section */
+        .booked-patients-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+
+        .patient-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .patient-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .generate-bill { background: #28a745; color: white; }
+        .update-status { background: #ffc107; color: black; }
+        .cancel-appointment { background: #dc3545; color: white; }
+
+        .status-booked { color: #007bff; font-weight: bold; }
+        .status-completed { color: #28a745; font-weight: bold; }
+        .status-cancelled { color: #dc3545; font-weight: bold; }
+
+        /* Form Panel */
+        #formPanel {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+
+    <script>
+        // Admin Authentication Check
+        (function() {
+            const isAuthenticated = sessionStorage.getItem('adminAuthenticated');
+            const adminEmail = sessionStorage.getItem('adminEmail');
+            const loginTime = sessionStorage.getItem('loginTime');
+
+            if (!isAuthenticated || isAuthenticated !== 'true') {
+                // Redirect to login page if not authenticated
+                console.log('🔐 Authentication required, redirecting to login...');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            // Log admin access
+            console.log('👤 Admin authenticated:', adminEmail);
+            console.log('🕒 Login time:', new Date(loginTime).toLocaleString());
+
+            // Add logout button to navigation
+            document.addEventListener('DOMContentLoaded', function() {
+                const nav = document.querySelector('nav');
+                const logoutBtn = document.createElement('button');
+                logoutBtn.textContent = 'Logout';
+                logoutBtn.style.cssText = `
+                    background: #e74c3c;
+                    color: white;
+                    border: none;
+                    padding: 8px 15px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    margin-left: auto;
+                    font-size: 14px;
+                `;
+                logoutBtn.onclick = function() {
+                    sessionStorage.removeItem('adminAuthenticated');
+                    sessionStorage.removeItem('adminEmail');
+                    sessionStorage.removeItem('loginTime');
+                    window.location.href = 'admin-login.html';
+                };
+                nav.appendChild(logoutBtn);
+            });
+
+        })();
+    </script>
+</head>
+<body>
+
+<nav>Hospital Admin Dashboard</nav>
+
+<aside id="sidebar">
+    <button class="active" data-section="booked-patients" title="Booked Patients">📋 Booked Patients</button>
+    <button data-section="bills" title="Manage Bills">💰 Bills</button>
+    <button data-section="prescriptions" title="Manage Prescriptions">💊 Prescriptions</button>
+    <button data-section="appointments" title="Manage Appointments">📅 Appointments</button>
+    <button data-section="departments" title="Manage Departments">🏥 Departments</button>
+</aside>
+
+<main id="main">
+    <h2 id="main-title">Admin Dashboard</h2>
+    <div id="action-buttons-container"></div>
+    <!-- Dynamic content will be loaded here -->
+</main>
+
+<!-- Slide-in Form Panel -->
+<section id="formPanel" aria-hidden="true" aria-label="Form panel">
+    <span class="close-btn" id="closeForm">&times;</span>
+    <h3 id="formTitle">Form Title</h3>
+    <form id="actionForm">
+        <!-- Dynamic form inputs go here -->
+    </form>
+</section>
+
+<script src="admin.js"></script>
+</body>
+</html>
