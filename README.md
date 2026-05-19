@@ -84,7 +84,7 @@ One specialist doctor is seeded per department automatically on first run.
 ---
 ## 👨‍💻 Author
 
-**Sambit Kumar Panda**
+**Sambit Kumar Mohapatra**
 MCA — Indira Gandhi Institute of Technology, Sarang
 GitHub: https://github.com/SambitKumarMohapatra
 
